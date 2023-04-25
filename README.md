@@ -1,4 +1,4 @@
 # BoxDiff
 BoxDiff: Text-to-Image Synthesis with Training-Free Box-Constrained Diffusion
 
-![boxdiff_teaser.png]
+![](boxdiff_teaser.png)
