@@ -53,4 +53,4 @@ outputs/
 ```
 ![](docs/example.png)
 
-Acknowledgment - the code is highly based on the repository of [google](https://github.com/google/prompt-to-prompt) and [yuval-alaluf](https://github.com/yuval-alaluf).
+Acknowledgment - the code is highly based on the repository of [diffusers](https://github.com/huggingface/diffusers), [google](https://github.com/google/prompt-to-prompt), and [yuval-alaluf](https://github.com/yuval-alaluf).
