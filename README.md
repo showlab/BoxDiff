@@ -1,11 +1,14 @@
-# BoxDiff: Text-to-Image Synthesis with Training-Free Box-Constrained Diffusion (ICCV 2023)
+<div align="center">
+<h1>BoxDiff 🕊️ (ICCV 2023)</h1>
+<h3>BoxDiff: Text-to-Image Synthesis with Training-Free Box-Constrained Diffusion</h3>
 
-> Jinheng Xie, Yuexiang Li, Yawen Huang, Haozhe Liu, Wentian Zhang, Yefeng Zheng, Mike Zheng Shou 
-> National University of Singapore, Tencent Jarvis Lab, KAUST
->
-> Recent text-to-image diffusion models have demonstrated an astonishing capacity to generate high-quality images. However, researchers mainly studied the way of synthesizing images with only text prompts. While some works have explored using other modalities as conditions, considerable paired data, e.g., box/mask-image pairs, and fine-tuning time are required for nurturing models. As such paired data is time-consuming and labor-intensive to acquire and restricted to a closed set, this potentially becomes the bottleneck for applications in an open world. This paper focuses on the simplest form of user-provided conditions, e.g., box or scribble. To mitigate the aforementioned problem, we propose a training-free method to control objects and contexts in the synthesized images adhering to the given spatial conditions. Specifically, three spatial constraints, i.e., Inner-Box, Outer-Box, and Corner Constraints, are designed and seamlessly integrated into the denoising step of diffusion models, requiring no additional training and massive annotated layout data. Extensive results show that the proposed constraints can control what and where to present in the images while retaining the ability of the Stable Diffusion model to synthesize with high fidelity and diverse concept coverage.
-> 
-> **The paper is still being revised and you can refer to [Arxiv](https://arxiv.org/abs/2307.10816) for preview.**
+Jinheng Xie<sup>1</sup>&nbsp; Yuexiang Li<sup>2</sup>&nbsp; Yawen Huang<sup>2</sup>&nbsp; Haozhe Liu<sup>2,3</sup>&nbsp; Wentian Zhang<sup>2</sup> Yefeng Zheng<sup>2</sup>&nbsp; Mike Zheng Shou<sup>1</sup> 
+
+<sup>1</sup> National University of Singapore <sup>2</sup>&nbsp; Tencent Jarvis Lab <sup>3</sup>&nbsp; KAUST
+
+[![arXiv](https://img.shields.io/badge/arXiv-<2307.10816>-<COLOR>.svg)](https://arxiv.org/abs/2307.10816)
+
+</div>
 
 ![](docs/boxdiff.png)
 
