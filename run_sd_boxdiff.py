@@ -6,7 +6,7 @@ import pyrallis
 import torch
 from PIL import Image
 from config import RunConfig
-from pipeline_boxdiff import BoxDiffPipeline
+from pipeline.sd_pipeline_boxdiff import BoxDiffPipeline
 from utils import ptp_utils, vis_utils
 from utils.ptp_utils import AttentionStore
 
@@ -27,6 +27,7 @@ def load_model(config: RunConfig):
         # If you cannot access the huggingface on your server, you can use the local prepared one.
         # stable_diffusion_version = "../../packages/huggingface/hub/stable-diffusion-v1-4"
     stable = BoxDiffPipeline.from_pretrained(stable_diffusion_version).to(device)
+
     return stable
 
 
@@ -83,7 +84,6 @@ def main(config: RunConfig):
     images = []
     for seed in config.seeds:
         print(f"Current seed is : {seed}")
-
         g = torch.Generator('cuda').manual_seed(seed)
         controller = AttentionStore()
         image = run_on_prompt(prompt=config.prompt,
@@ -110,7 +110,5 @@ def main(config: RunConfig):
     joined_image.save(config.output_path / f'{config.prompt}.png')
 
 
-# [88,116,372,487,82,183,380,295]
-# [126,119,390,500,128,198,392,289]
 if __name__ == '__main__':
     main()

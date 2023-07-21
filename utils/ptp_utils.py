@@ -63,8 +63,7 @@ class AttendExciteCrossAttnProcessor:
 
     def __call__(self, attn: CrossAttention, hidden_states, encoder_hidden_states=None, attention_mask=None):
         batch_size, sequence_length, _ = hidden_states.shape
-        attention_mask = attn.prepare_attention_mask(attention_mask, sequence_length)
-
+        attention_mask = attn.prepare_attention_mask(attention_mask, sequence_length, batch_size=1)
         query = attn.to_q(hidden_states)
 
         is_cross = encoder_hidden_states is not None
@@ -115,10 +114,8 @@ def register_attention_control(model, controller):
         attn_procs[name] = AttendExciteCrossAttnProcessor(
             attnstore=controller, place_in_unet=place_in_unet
         )
-
     model.unet.set_attn_processor(attn_procs)
     controller.num_att_layers = cross_att_count
-
 
 class AttentionControl(abc.ABC):
 
@@ -128,9 +125,9 @@ class AttentionControl(abc.ABC):
     def between_steps(self):
         return
 
-    @property
-    def num_uncond_att_layers(self):
-        return 0
+    # @property
+    # def num_uncond_att_layers(self):
+    #     return 0
 
     @abc.abstractmethod
     def forward(self, attn, is_cross: bool, place_in_unet: str):
@@ -213,6 +210,7 @@ class AttentionStore(AttentionControl):
         self.attention_store = {}
         self.global_store = {}
         self.curr_step_index = 0
+        self.num_uncond_att_layers = 0
 
 
 def aggregate_attention(attention_store: AttentionStore,
@@ -223,8 +221,7 @@ def aggregate_attention(attention_store: AttentionStore,
     """ Aggregates the attention across the different layers and heads at the specified resolution. """
     out = []
     attention_maps = attention_store.get_average_attention()
-    # import ipdb
-    # ipdb.set_trace()
+
     num_pixels = res ** 2
     for location in from_where:
         for item in attention_maps[f"{location}_{'cross' if is_cross else 'self'}"]:

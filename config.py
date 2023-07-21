@@ -47,6 +47,7 @@ class RunConfig:
     # number of pixels around the corner to be selected
     L: int = 1
     refine: bool = True
+    gligen_phrases: List[str] = field(default_factory=lambda: ['', ''])
 
 
     def __post_init__(self):
