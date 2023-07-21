@@ -53,4 +53,14 @@ outputs/
 ```
 ![](docs/example.png)
 
+### Citation
+``` 
+@article{xie2023boxdiff,
+  title={BoxDiff: Text-to-Image Synthesis with Training-Free Box-Constrained Diffusion},
+  author={Xie, Jinheng and Li, Yuexiang and Huang, Yawen and Liu, Haozhe and Zhang, Wentian and Zheng, Yefeng and Shou, Mike Zheng},
+  journal={arXiv preprint arXiv:2307.10816},
+  year={2023}
+}
+```
+
 Acknowledgment - the code is highly based on the repository of [diffusers](https://github.com/huggingface/diffusers), [google](https://github.com/google/prompt-to-prompt), and [yuval-alaluf](https://github.com/yuval-alaluf).
