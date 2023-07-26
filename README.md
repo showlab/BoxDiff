@@ -56,6 +56,9 @@ outputs/
 ```
 ![](docs/example.png)
 
+### Customized Your Layout
+[VisorGPT](https://github.com/Sierkinhane/VisorGPT) can customize layouts as spatial conditions for image synthesis using BoxDiff.
+<img src="docs/visorgpt.gif" width=1000>
 ### Citation
 ``` 
 @article{xie2023boxdiff,
