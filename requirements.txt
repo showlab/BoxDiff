@@ -8,3 +8,4 @@ torchvision==0.13.0
 transformers==4.26.0
 jupyter
 accelerate
+IPython

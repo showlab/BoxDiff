@@ -10,7 +10,7 @@
 
 </div>
 
-![](docs/boxdiff.png)
+<img src="docs/boxdiff.gif" width="1000">
 
 ### Setup
 Note that we only test the code using PyTorch==1.12.0. You can build the environment via `pip` as follow: 

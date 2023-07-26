@@ -14,6 +14,8 @@ import numpy as np
 from utils.drawer import draw_rectangle, DashedImageDraw
 
 import warnings
+import json, os
+from tqdm import tqdm
 warnings.filterwarnings("ignore", category=UserWarning)
 
 
@@ -81,39 +83,64 @@ def run_on_prompt(prompt: List[str],
 @pyrallis.wrap()
 def main(config: RunConfig):
     stable = load_model()
-    token_indices = get_indices_to_alter(stable, config.prompt) if config.token_indices is None else config.token_indices
 
-    if len(config.bbox[0]) == 0:
-        config.bbox = draw_rectangle()
+    # read bbox from the pre-prepared .json file
+    with open('docs/bbox_as_condition.json', 'r', encoding='utf8') as fp:
+        bbox_json = json.load(fp)
 
-    images = []
-    for seed in config.seeds:
-        print(f"Current seed is : {seed}")
-        g = torch.Generator('cuda').manual_seed(seed)
-        controller = AttentionStore()
-        controller.num_uncond_att_layers = -16
-        image = run_on_prompt(prompt=config.prompt,
-                              model=stable,
-                              controller=controller,
-                              token_indices=token_indices,
-                              seed=g,
-                              config=config)
-        prompt_output_path = config.output_path / config.prompt[:100]
-        prompt_output_path.mkdir(exist_ok=True, parents=True)
-        image.save(prompt_output_path / f'{seed}.png')
-        images.append(image)
+    idx = np.arange(len(bbox_json))
+    split_idx = list(np.array_split(idx, config.n_splits)[config.which_one - 1])
 
-        canvas = Image.fromarray(np.zeros((image.size[0], image.size[0], 3), dtype=np.uint8) + 220)
-        draw = DashedImageDraw(canvas)
+    for bidx in tqdm(split_idx):
 
-        for i in range(len(config.bbox)):
-            x1, y1, x2, y2 = config.bbox[i]
-            draw.dashed_rectangle([(x1, y1), (x2, y2)], dash=(5, 5), outline=config.color[i], width=5)
-        canvas.save(prompt_output_path / f'{seed}_canvas.png')
+        filename = bbox_json[bidx]['filename']
+        sub_dir = filename.split('/')[-2]
+        img_name = filename.split('/')[-1].split('.')[0]
 
-    # save a grid of results across all seeds
-    joined_image = vis_utils.get_image_grid(images)
-    joined_image.save(config.output_path / f'{config.prompt}.png')
+        objects = bbox_json[bidx]['objects']
+        cls_name = list(objects.keys())
+        config.bbox = list(objects.values())
+        # import ipdb
+        # ipdb.set_trace()
+        text_prompt = ''
+        gligen_phrases = []
+        token_indices = []
+        for nidx, n in enumerate(cls_name):
+            text_prompt += f'a {n} and '
+            if nidx == 0:
+                token_indices.append(2)
+            else:
+                token_indices.append(5 + (nidx - 1) * 3)
+            gligen_phrases.append('a {n}')
+        config.prompt = text_prompt[:-5]
+        config.gligen_phrases = gligen_phrases
+
+        for seed in config.seeds:
+            print(f"Current seed is : {seed}")
+            g = torch.Generator('cuda').manual_seed(seed)
+            controller = AttentionStore()
+            controller.num_uncond_att_layers = -16
+            image = run_on_prompt(prompt=config.prompt,
+                                  model=stable,
+                                  controller=controller,
+                                  token_indices=token_indices,
+                                  seed=g,
+                                  config=config)
+
+            prompt_output_path = config.eval_output_path / sub_dir
+            prompt_output_path.mkdir(exist_ok=True, parents=True)
+            if os.path.isfile(prompt_output_path / f'{img_name}_{seed}.png'):
+                continue
+
+            image.save(prompt_output_path / f'{img_name}_{seed}.png')
+
+            canvas = Image.fromarray(np.zeros((image.size[0], image.size[0], 3), dtype=np.uint8) + 220)
+            draw = DashedImageDraw(canvas)
+
+            for i in range(len(config.bbox)):
+                x1, y1, x2, y2 = config.bbox[i]
+                draw.dashed_rectangle([(x1, y1), (x2, y2)], dash=(5, 5), outline=config.color[i], width=5)
+            canvas.save(prompt_output_path / f'{img_name}_{seed}_canvas.png')
 
 
 if __name__ == '__main__':

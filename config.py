@@ -48,6 +48,9 @@ class RunConfig:
     L: int = 1
     refine: bool = True
     gligen_phrases: List[str] = field(default_factory=lambda: ['', ''])
+    n_splits: int = 4
+    which_one: int = 1
+    eval_output_path: Path = Path('./outputs/eval')
 
 
     def __post_init__(self):
