@@ -61,11 +61,12 @@ outputs/
 <img src="docs/visorgpt.gif" width=1000>
 ### Citation
 ``` 
-@article{xie2023boxdiff,
-  title={BoxDiff: Text-to-Image Synthesis with Training-Free Box-Constrained Diffusion},
-  author={Xie, Jinheng and Li, Yuexiang and Huang, Yawen and Liu, Haozhe and Zhang, Wentian and Zheng, Yefeng and Shou, Mike Zheng},
-  journal={arXiv preprint arXiv:2307.10816},
-  year={2023}
+@InProceedings{Xie_2023_ICCV,
+    author    = {Xie, Jinheng and Li, Yuexiang and Huang, Yawen and Liu, Haozhe and Zhang, Wentian and Zheng, Yefeng and Shou, Mike Zheng},
+    title     = {BoxDiff: Text-to-Image Synthesis with Training-Free Box-Constrained Diffusion},
+    booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+    year      = {2023},
+    pages     = {7452-7461}
 }
 ```
 
