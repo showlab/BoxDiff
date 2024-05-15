@@ -12,6 +12,67 @@
 
 <img src="docs/boxdiff.gif" width="1000">
 
+### Integration in diffusers
+Thanks to @zjysteven for his efforts.
+```
+import torch
+from PIL import Image, ImageDraw
+from copy import deepcopy
+
+from examples.community.pipeline_stable_diffusion_boxdiff import StableDiffusionBoxDiffPipeline
+
+def draw_box_with_text(img, boxes, names):
+    colors = ["red", "olive", "blue", "green", "orange", "brown", "cyan", "purple"]
+    img_new = deepcopy(img)
+    draw = ImageDraw.Draw(img_new)
+
+    W, H = img.size
+    for bid, box in enumerate(boxes):
+        draw.rectangle([box[0] * W, box[1] * H, box[2] * W, box[3] * H], outline=colors[bid % len(colors)], width=4)
+        draw.text((box[0] * W, box[1] * H), names[bid], fill=colors[bid % len(colors)])
+    return img_new
+
+pipe = StableDiffusionBoxDiffPipeline.from_pretrained(
+    "stabilityai/stable-diffusion-2-1-base",
+    torch_dtype=torch.float16,
+)
+pipe.to("cuda")
+
+# example 1
+prompt = "as the aurora lights up the sky, a herd of reindeer leisurely wanders on the grassy meadow, admiring the breathtaking view, a serene lake quietly reflects the magnificent display, and in the distance, a snow-capped mountain stands majestically, fantasy, 8k, highly detailed"
+phrases = [
+    "aurora",
+    "reindeer",
+    "meadow",
+    "lake",
+    "mountain"
+]
+boxes = [[1,3,512,202], [75,344,421,495], [1,327,508,507], [2,217,507,341], [1,135,509,242]]
+
+# example 2
+# prompt = "A rabbit wearing sunglasses looks very proud"
+# phrases = ["rabbit", "sunglasses"]
+# boxes = [[67,87,366,512], [66,130,364,262]]
+
+boxes = [[x / 512 for x in box] for box in boxes]
+
+images = pipe(
+    prompt,
+    boxdiff_phrases=phrases,
+    boxdiff_boxes=boxes,
+    boxdiff_kwargs={
+        "attention_res": 16,
+        "normalize_eot": True
+    },
+    num_inference_steps=50,
+    guidance_scale=7.5,
+    generator=torch.manual_seed(42),
+    safety_checker=None
+).images
+
+draw_box_with_text(images[0], boxes, phrases).save("output.png")
+```
+
 ### Setup
 Note that we only test the code using PyTorch==1.12.0. You can build the environment via `pip` as follow: 
 ```
