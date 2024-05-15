@@ -13,7 +13,7 @@
 <img src="docs/boxdiff.gif" width="1000">
 
 ### Integration in diffusers
-Thanks to [@zjysteven](https://github.com/zjysteven) for his efforts. Below shows an example with stable-diffusion-2-1-base.
+Thanks to [@zjysteven](https://github.com/zjysteven) for his efforts. Below shows an example with `stable-diffusion-2-1-base`.
 ```
 import torch
 from PIL import Image, ImageDraw
