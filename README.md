@@ -12,6 +12,9 @@
 
 <img src="docs/boxdiff.gif" width="1000">
 
+### BoxDiff-SD-XL
+[A BoxDiff implementation based on SD-XL](https://github.com/Cominclip/BoxDiff-XL)
+
 ### Integration in diffusers
 Thanks to [@zjysteven](https://github.com/zjysteven) for his efforts. Below shows an example with `stable-diffusion-2-1-base`.
 ```
